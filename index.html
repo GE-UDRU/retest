@@ -6,16 +6,14 @@
     <title>ระบบคำร้องขอสอบกรณีพิเศษ | สำนักวิชาศึกษาทั่วไป</title>
     <link rel="icon" href="https://i.postimg.cc/qvNSwzD4/Logo-GE.png" type="image/png">
     <style>
-        /* ล้างค่าระยะขอบทั้งหมดเพื่อให้เต็มจอ 100% */
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
             width: 100%;
-            overflow: hidden; /* ป้องกัน Scrollbar ซ้อน */
+            overflow: hidden;
+            background-color: #f3f4f6; /* สีพื้นหลังเดียวกับ App เพื่อความเนียน */
         }
-        
-        /* ตั้งค่า iframe ให้ทับเต็มหน้าจอ */
         iframe {
             position: absolute;
             top: 0;
@@ -27,7 +25,38 @@
     </style>
 </head>
 <body>
-    <iframe src="https://script.google.com/macros/s/AKfycbwLHgL0NtRh3iDRAEig_iAXxCPBKa6gKi1nCntlIzIhDzKcIEkwFId4KckVO5eKNMwF/exec"></iframe>
+
+    <iframe id="app-frame"></iframe>
+
+    <script>
+        // ==========================================
+        // ตั้งค่า: วางลิงก์ Google Apps Script (Web App URL) ของคุณที่นี่
+        // (ต้องลงท้ายด้วย /exec เท่านั้น ห้ามใช้ /dev)
+        // ==========================================
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwLHgL0NtRh3iDRAEig_iAXxCPBKa6gKi1nCntlIzIhDzKcIEkwFId4KckVO5eKNMwF/exec"; 
+        // ==========================================
+
+        function loadIframe() {
+            // ดึงค่าพารามิเตอร์จาก URL ของ GitHub (เช่น ?page=admin)
+            const params = new URLSearchParams(window.location.search);
+            const page = params.get('page');
+            
+            let finalUrl = GOOGLE_SCRIPT_URL;
+
+            // ถ้ามีพารามิเตอร์ page ส่งมา ให้ส่งต่อไปยัง Google Script
+            if (page) {
+                // เช็คว่า URL เดิมมี ? อยู่แล้วหรือไม่ เพื่อเชื่อม Query String ให้ถูก
+                const separator = finalUrl.includes('?') ? '&' : '?';
+                finalUrl += separator + 'page=' + page;
+            }
+
+            // โหลด URL ปลายทางลงใน Iframe
+            document.getElementById('app-frame').src = finalUrl;
+        }
+
+        // เริ่มทำงานเมื่อเปิดหน้าเว็บ
+        loadIframe();
+    </script>
 
 </body>
 </html>
